@@ -19,4 +19,4 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build application
-        run: cd hw01-xml-config && mvn -B package --file pom.xml
+        run: mvn -B package --file pom.xml
