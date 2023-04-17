@@ -22,6 +22,5 @@ public class App {
         } catch (IOException e) {
             throw new RuntimeException("Unable to get a list of questions", e);
         }
-
     }
 }
