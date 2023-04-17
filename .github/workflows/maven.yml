@@ -19,5 +19,4 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build application
-        run: |
-          cd .. & mvn package "--no-transfer-progress"
+        run: cd hw01-xml-config && mvn -B package --file pom.xml
