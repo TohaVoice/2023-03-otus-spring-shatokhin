@@ -11,12 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Answer {
 
-    private String point;
+    private String text;
 
     private Character letter;
-
-    @Override
-    public String toString() {
-        return letter + ") " + point;
-    }
 }

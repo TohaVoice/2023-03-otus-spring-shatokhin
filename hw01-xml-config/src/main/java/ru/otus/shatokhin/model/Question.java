@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,14 +15,7 @@ public class Question {
 
     private long number;
 
-    private String point;
+    private String text;
 
     private List<Answer> answers;
-
-    @Override
-    public String toString() {
-        return String.format("\n%s. %s\n%s\n", number, point, answers.stream()
-                .map(Answer::toString)
-                .collect(Collectors.joining(";\n")));
-    }
 }

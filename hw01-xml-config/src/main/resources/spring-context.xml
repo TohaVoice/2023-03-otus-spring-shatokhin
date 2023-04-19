@@ -4,8 +4,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="questionsService" class="ru.otus.shatokhin.service.QuestionsServiceImpl">
+    <bean id="csvQuestionDao" class="ru.otus.shatokhin.dao.CsvQuestionDaoImpl">
         <constructor-arg index="0" value="data/questions-answers.csv"/>
+    </bean>
+    <bean id="questionConverter" class="ru.otus.shatokhin.service.QuestionConverterImpl"/>
+
+    <bean id="questionService" class="ru.otus.shatokhin.service.QuestionServiceImpl">
+        <constructor-arg index="0" ref="csvQuestionDao"/>
+        <constructor-arg index="1" ref="questionConverter"/>
     </bean>
 
 </beans>
