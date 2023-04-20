@@ -13,12 +13,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionConverter questionConverter;
 
-    public QuestionServiceImpl(QuestionDao questionDao, QuestionConverter questionConverter) {
-        this.questionDao = questionDao;
-        this.ioService = new IOServiceStreams(System.out, System.in);
-        this.questionConverter = questionConverter;
-    }
-
     public QuestionServiceImpl(QuestionDao questionDao, IOService ioService, QuestionConverter questionConverter) {
         this.questionDao = questionDao;
         this.ioService = ioService;
