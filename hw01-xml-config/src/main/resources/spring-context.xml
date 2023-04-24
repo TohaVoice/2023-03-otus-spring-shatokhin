@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="csvQuestionDao" class="ru.otus.shatokhin.dao.CsvQuestionDaoImpl">
+        <constructor-arg index="0" value="data/questions-answers.csv"/>
+    </bean>
+    <bean id="questionConverter" class="ru.otus.shatokhin.service.QuestionConverterImpl"/>
+
+    <bean id="questionService" class="ru.otus.shatokhin.service.QuestionServiceImpl">
+        <constructor-arg index="0" ref="csvQuestionDao"/>
+        <constructor-arg index="1" ref="ioService"/>
+        <constructor-arg index="2" ref="questionConverter"/>
+    </bean>
+
+    <bean id="ioService" class="ru.otus.shatokhin.service.IOServiceStreams">
+        <constructor-arg type="java.io.PrintStream" value="#{T(System).out}" />
+        <constructor-arg type="java.io.InputStream" value="#{T(System).in}" />
+    </bean>
+
+</beans>
