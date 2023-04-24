@@ -30,17 +30,17 @@ public class CsvQuestionsDaoTest {
                 () -> assertThat(questions.get(0).getText()).isEqualTo("The question #1?"),
                 () -> assertThat(questions.get(0).getAnswers())
                         .hasSize(4)
-                        .contains(new Answer("a", 'a'), atIndex(0))
-                        .contains(new Answer("b", 'b'), atIndex(1))
-                        .contains(new Answer("c", 'c'), atIndex(2))
-                        .contains(new Answer("d", 'd'), atIndex(3)),
+                        .contains(new Answer("a", 'a', true), atIndex(0))
+                        .contains(new Answer("b", 'b', false), atIndex(1))
+                        .contains(new Answer("c", 'c', false), atIndex(2))
+                        .contains(new Answer("d", 'd', false), atIndex(3)),
                 () -> assertThat(questions.get(1).getText()).isEqualTo("The question #2?"),
                 () -> assertThat(questions.get(1).getAnswers())
                         .hasSize(4)
-                        .contains(new Answer("a2", 'a'), atIndex(0))
-                        .contains(new Answer("b2", 'b'), atIndex(1))
-                        .contains(new Answer("c2", 'c'), atIndex(2))
-                        .contains(new Answer("d2", 'd'), atIndex(3))
+                        .contains(new Answer("a2", 'a', false), atIndex(0))
+                        .contains(new Answer("b2", 'b', true), atIndex(1))
+                        .contains(new Answer("c2", 'c', false), atIndex(2))
+                        .contains(new Answer("d2", 'd', false), atIndex(3))
         );
     }
 }

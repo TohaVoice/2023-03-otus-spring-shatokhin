@@ -48,17 +48,20 @@ public class CsvQuestionDaoImpl implements QuestionDao {
     }
 
     private String[] getHeaders() {
-        return new String[]{"question", "a_answer", "b_answer", "c_answer", "d_answer"};
+        return new String[]{"r_answer", "question", "a_answer", "b_answer", "c_answer", "d_answer"};
     }
 
     private Question convertRecordToQuestion(CSVRecord record) {
         String[] headers = getHeaders();
         List<Answer> answers = new ArrayList<>();
-        for (int i = 1; i < headers.length; i++) {
+        for (int i = 2; i < headers.length; i++) {
             String answerHeader = headers[i];
-            answers.add(new Answer(record.get(answerHeader), answerHeader.charAt(0)));
+            char correctAnswer = record.get(headers[0]).charAt(0);
+            char answerLetter = answerHeader.charAt(0);
+            boolean isCorrect = correctAnswer == answerLetter;
+            answers.add(new Answer(record.get(answerHeader), answerLetter, isCorrect));
         }
-        return new Question(record.getRecordNumber(), record.get(headers[0]), answers);
+        return new Question(record.getRecordNumber(), record.get(headers[1]), answers);
     }
 
 }

@@ -14,4 +14,6 @@ public class Answer {
     private String text;
 
     private Character letter;
+
+    private boolean isCorrect;
 }

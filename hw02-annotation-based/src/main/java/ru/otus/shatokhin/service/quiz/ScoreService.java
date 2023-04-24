@@ -1,12 +1,12 @@
 package ru.otus.shatokhin.service.quiz;
 
-import ru.otus.shatokhin.model.QuizMatcher;
+import ru.otus.shatokhin.model.Answer;
 
 import java.util.List;
 
 public interface ScoreService {
 
-    int calculateScore(List<QuizMatcher> resultMatchers);
+    long calculateScore(List<Answer> answers);
 
-    boolean isSucceedQuiz(int score);
+    boolean isSucceedQuiz(long score);
 }

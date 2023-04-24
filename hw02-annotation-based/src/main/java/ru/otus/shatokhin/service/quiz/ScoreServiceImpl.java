@@ -2,40 +2,28 @@ package ru.otus.shatokhin.service.quiz;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.otus.shatokhin.dao.QuizMatcherDao;
-import ru.otus.shatokhin.model.QuizMatcher;
+import ru.otus.shatokhin.model.Answer;
 
 import java.util.List;
 
 @Service
 public class ScoreServiceImpl implements ScoreService {
 
-    @Value("${quiz.successScore}")
-    private Integer successScore;
+    private final int successScore;
 
-    private final QuizMatcherDao quizMatcherDao;
-
-    public ScoreServiceImpl(QuizMatcherDao quizMatcherDao) {
-        this.quizMatcherDao = quizMatcherDao;
+    public ScoreServiceImpl(@Value("${quiz.successScore}") int successScore) {
+        this.successScore = successScore;
     }
 
     @Override
-    public int calculateScore(List<QuizMatcher> resultMatchers) {
-        int score = 0;
-        List<QuizMatcher> sourceMatches = quizMatcherDao.getQuizMatchers();
-        for (QuizMatcher quizMatcher : sourceMatches) {
-            boolean isCorrectMatch = resultMatchers.stream()
-                    .anyMatch(qm -> qm.getNumberOfQuestion() == quizMatcher.getNumberOfQuestion()
-                    && qm.getCorrectAnswerLetter().equals(quizMatcher.getCorrectAnswerLetter()));
-            if (isCorrectMatch) {
-                score++;
-            }
-        }
-        return score;
+    public long calculateScore(List<Answer> answers) {
+        return answers.stream()
+                .filter(Answer::isCorrect)
+                .count();
     }
 
     @Override
-    public boolean isSucceedQuiz(int score) {
+    public boolean isSucceedQuiz(long score) {
         return successScore <= score;
     }
 }

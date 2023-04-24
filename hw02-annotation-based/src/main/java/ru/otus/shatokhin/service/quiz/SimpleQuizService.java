@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.otus.shatokhin.dao.QuestionDao;
 import ru.otus.shatokhin.model.Answer;
 import ru.otus.shatokhin.model.Question;
-import ru.otus.shatokhin.model.QuizMatcher;
 import ru.otus.shatokhin.service.IOService;
 import ru.otus.shatokhin.service.QuestionConverter;
 
@@ -26,21 +25,25 @@ public class SimpleQuizService implements QuizService {
 
     @Override
     public void runQuiz() {
-        ioService.readStringWithPrompt("Enter your first and last name:");
+        String fullName = ioService.readStringWithPrompt("Enter your first and last name:");
         List<Question> questions = questionDao.getQuestions();
-        List<QuizMatcher> resultMatchers = new ArrayList<>();
+        List<Answer> answers = new ArrayList<>();
         for (Question question : questions) {
-            QuizMatcher quizMatcher = runQuestion(question);
-            resultMatchers.add(quizMatcher);
+            Answer answer = runQuestion(question);
+            answers.add(answer);
         }
 
-        int score = scoreService.calculateScore(resultMatchers);
+        long score = scoreService.calculateScore(answers);
 
-        ioService.outputString(String.format("Number of correct answers %s out of %s.", score, questions.size()));
+        printResult(fullName, score, questions.size());
+    }
+
+    private void printResult(String fullName, long score, int questionsCount) {
+        ioService.outputString(String.format("Number of correct answers %s out of %s.", score, questionsCount));
         if (scoreService.isSucceedQuiz(score)) {
-            ioService.outputString("You have passed the examination");
+            ioService.outputString(String.format("%s, you have passed the examination", fullName));
         } else {
-            ioService.outputString("You did not pass the exam");
+            ioService.outputString(String.format("%s, you did not pass the exam", fullName));
         }
     }
 
@@ -57,14 +60,14 @@ public class SimpleQuizService implements QuizService {
                 .orElse(null);
     }
 
-    private QuizMatcher runQuestion(Question question) {
+    private Answer runQuestion(Question question) {
         String answer = ioService.readStringWithPrompt(questionConverter.questionToString(question));
         Answer answerByInput = getAnswerByInput(answer, question.getAnswers());
         if (answerByInput == null) {
             ioService.outputString("Sorry, but your answer is incorrect, try again\n");
             return runQuestion(question);
         } else {
-            return new QuizMatcher(question.getNumber(), answerByInput.getLetter());
+            return answerByInput;
         }
     }
 
