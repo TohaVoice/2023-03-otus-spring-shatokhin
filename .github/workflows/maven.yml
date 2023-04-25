@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-#     branches: [ "main" ]
+    branches: [ "hw01-xml-config" ]
   pull_request:
-#     branches: [ "main" ]
+    branches: [ "hw01-xml-config" ]
 
 jobs:
   build:
