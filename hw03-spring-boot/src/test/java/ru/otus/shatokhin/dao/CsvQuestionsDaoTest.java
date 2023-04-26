@@ -6,7 +6,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.shatokhin.configs.AppProps;
+import ru.otus.shatokhin.configs.app.AppProps;
+import ru.otus.shatokhin.configs.app.AppPropsImpl;
+import ru.otus.shatokhin.configs.dao.DaoConfig;
 import ru.otus.shatokhin.model.Answer;
 import ru.otus.shatokhin.model.Question;
 
@@ -21,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class CsvQuestionsDaoTest {
 
     @Mock
-    private AppProps propsMock;
+    private DaoConfig daoConfigMock;
 
     @InjectMocks
     private CsvQuestionDao csvQuestionDao;
@@ -29,7 +31,7 @@ public class CsvQuestionsDaoTest {
     @DisplayName("Get questions correctly")
     @Test
     void getQuestions() {
-        when(propsMock.questionsPath()).thenReturn("data/test-questions-answers.csv");
+        when(daoConfigMock.fileName()).thenReturn("data/test-questions-answers.csv");
         List<Question> questions = csvQuestionDao.getQuestions();
         assertAll(
                 () -> assertThat(questions).hasSize(2),

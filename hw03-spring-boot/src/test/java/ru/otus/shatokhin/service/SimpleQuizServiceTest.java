@@ -9,6 +9,7 @@ import ru.otus.shatokhin.dao.QuestionDao;
 import ru.otus.shatokhin.model.Answer;
 import ru.otus.shatokhin.model.Question;
 import ru.otus.shatokhin.model.User;
+import ru.otus.shatokhin.service.localization.LocalisationIOService;
 import ru.otus.shatokhin.service.localization.LocalisationMessageService;
 import ru.otus.shatokhin.service.quiz.ScoreService;
 import ru.otus.shatokhin.service.quiz.SimpleQuizService;
@@ -25,13 +26,10 @@ class SimpleQuizServiceTest {
     private UserService userService;
 
     @Mock
-    private LocalisationMessageService localisationMessageService;
-
-    @Mock
     private QuestionDao questionDaoMock;
 
     @Mock
-    private IOService ioServiceMock;
+    private LocalisationIOService ioServiceMock;
 
     @Mock
     private QuestionConverter questionConverterMock;
@@ -57,20 +55,17 @@ class SimpleQuizServiceTest {
         questions.add(q1);
         questions.add(q2);
         when(questionDaoMock.getQuestions()).thenReturn(questions);
-        when(ioServiceMock.readStringWithPrompt(any()))
+        when(ioServiceMock.readStringWithLocalePrompt(any()))
                 .thenReturn("Test User")
                 .thenReturn("a")
                 .thenReturn("b");
 
         quizService.runQuiz();
 
-        verify(ioServiceMock, times(3)).readStringWithPrompt(any());
+        verify(ioServiceMock, times(3)).readStringWithLocalePrompt(any());
         verify(questionConverterMock, times(3)).questionToString(any());
-        verify(ioServiceMock, times(3)).outputString(any());
+        verify(ioServiceMock, times(1)).outputLocaleString(any());
         verify(scoreServiceMock, times(1)).calculateScore(any());
-        verify(localisationMessageService, times(3)).getMessage(any(), any());
-        verify(localisationMessageService, times(1)).getMessage(any());
-
     }
 
 }

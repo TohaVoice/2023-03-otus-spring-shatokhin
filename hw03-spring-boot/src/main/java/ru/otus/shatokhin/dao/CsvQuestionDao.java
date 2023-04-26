@@ -1,11 +1,12 @@
 package ru.otus.shatokhin.dao;
 
+import lombok.AllArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
-import ru.otus.shatokhin.configs.AppProps;
+import ru.otus.shatokhin.configs.dao.DaoConfig;
 import ru.otus.shatokhin.exception.QuestionReadException;
 import ru.otus.shatokhin.model.Answer;
 import ru.otus.shatokhin.model.Question;
@@ -18,13 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@AllArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
 
-    private final AppProps props;
-
-    public CsvQuestionDao(AppProps props) {
-        this.props = props;
-    }
+    private final DaoConfig daoConfig;
 
     @Override
     public List<Question> getQuestions() {
@@ -44,7 +42,7 @@ public class CsvQuestionDao implements QuestionDao {
     }
 
     private Resource getQuestionsResource() {
-        return new ClassPathResource(props.questionsPath());
+        return new ClassPathResource(daoConfig.fileName());
     }
 
     private String[] getHeaders() {

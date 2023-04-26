@@ -2,7 +2,7 @@ package ru.otus.shatokhin.service.quiz;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.shatokhin.configs.AppProps;
+import ru.otus.shatokhin.configs.app.AppProps;
 import ru.otus.shatokhin.model.Answer;
 
 import java.util.List;

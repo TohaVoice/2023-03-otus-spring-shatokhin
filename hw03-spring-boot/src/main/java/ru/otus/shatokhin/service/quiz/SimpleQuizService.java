@@ -7,10 +7,9 @@ import ru.otus.shatokhin.dao.QuestionDao;
 import ru.otus.shatokhin.model.Answer;
 import ru.otus.shatokhin.model.Question;
 import ru.otus.shatokhin.model.User;
-import ru.otus.shatokhin.service.IOService;
 import ru.otus.shatokhin.service.QuestionConverter;
 import ru.otus.shatokhin.service.UserService;
-import ru.otus.shatokhin.service.localization.LocalisationMessageService;
+import ru.otus.shatokhin.service.localization.LocalisationIOService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +20,13 @@ public class SimpleQuizService implements QuizService, CommandLineRunner {
 
     private final QuestionDao questionDao;
 
-    private final IOService ioService;
-
     private final QuestionConverter questionConverter;
 
     private final ScoreService scoreService;
 
-    private final LocalisationMessageService msgService;
-
     private final UserService userService;
+
+    private final LocalisationIOService ioService;
 
     @Override
     public void run(String... args) {
@@ -52,11 +49,11 @@ public class SimpleQuizService implements QuizService, CommandLineRunner {
     }
 
     private void printResult(String fullName, long score, int questionsCount) {
-        ioService.outputString(msgService.getMessage("msg.correctAnswers", score, questionsCount));
+        ioService.outputLocaleString("msg.correctAnswers", score, questionsCount);
         if (scoreService.isSucceedQuiz(score)) {
-            ioService.outputString(msgService.getMessage("msg.passedExam", fullName));
+            ioService.outputLocaleString("msg.passedExam", fullName);
         } else {
-            ioService.outputString(msgService.getMessage("msg.notPassedExam", fullName));
+            ioService.outputLocaleString("msg.notPassedExam", fullName);
         }
     }
 
@@ -74,10 +71,10 @@ public class SimpleQuizService implements QuizService, CommandLineRunner {
     }
 
     private Answer runQuestion(Question question) {
-        String answer = ioService.readStringWithPrompt(questionConverter.questionToString(question));
+        String answer = ioService.readStringWithLocalePrompt(questionConverter.questionToString(question));
         Answer answerByInput = getAnswerByInput(answer, question.getAnswers());
         if (answerByInput == null) {
-            ioService.outputString(msgService.getMessage("msg.incorrectAnswer"));
+            ioService.outputLocaleString("msg.incorrectAnswer");
             return runQuestion(question);
         } else {
             return answerByInput;

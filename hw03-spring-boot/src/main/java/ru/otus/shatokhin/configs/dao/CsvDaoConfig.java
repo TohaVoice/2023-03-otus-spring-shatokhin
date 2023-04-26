@@ -1,4 +1,4 @@
-package ru.otus.shatokhin.configs;
+package ru.otus.shatokhin.configs.dao;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -6,10 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Locale;
 
 @ConfigurationProperties(prefix = "application")
-public record AppProps(Locale locale, String questionsPath, int successScore) {
+public record CsvDaoConfig(String fileName, Locale locale) implements DaoConfig {
 
-    public String questionsPath() {
-        return getLocalisedFilePath(questionsPath);
+    @Override
+    public String fileName() {
+        return getLocalisedFilePath(fileName);
     }
 
     private String getLocalisedFilePath(String fileName) {
@@ -18,5 +19,4 @@ public record AppProps(Locale locale, String questionsPath, int successScore) {
         String path = FilenameUtils.getPath(fileName);
         return path + baseName + "_" + locale + "." + extension;
     }
-
 }

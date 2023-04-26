@@ -8,5 +8,5 @@ spring:
 
 application:
   locale: ru_RU
-  questionsPath: data/questions-answers.csv
+  fileName: data/questions-answers.csv
   successScore: 4
