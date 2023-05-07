@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface AuthorService {
 
-    void create(Author book);
+    void create(Author author);
 
     List<Author> getAll();
 
-    Author getById();
+    Author getById(long id);
 }

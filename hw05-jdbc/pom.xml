@@ -20,6 +20,9 @@
 		<checkstyle.version>10.9.1</checkstyle.version>
 		<spring.shell.version>3.0.0</spring.shell.version>
 		<h2.version>2.1.214</h2.version>
+<!--		<liquibase.version>4.21.1</liquibase.version>-->
+		<de.vandermeer.version>0.3.2</de.vandermeer.version>
+		<jackson-databind.version>2.15.0</jackson-databind.version>
 		<checkstyle.config.url>https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml</checkstyle.config.url>
 	</properties>
 	<dependencies>
@@ -43,14 +46,19 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-inline</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
 			<version>${spring.shell.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${liquibase.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.vandermeer</groupId>
+			<artifactId>asciitable</artifactId>
+			<version>${de.vandermeer.version}</version>
 		</dependency>
 	</dependencies>
 

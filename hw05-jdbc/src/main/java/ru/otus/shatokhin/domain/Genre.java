@@ -9,7 +9,16 @@ public class Genre {
 
     private String name;
 
+    public Genre(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Genre(String name) {
         this.name = name;
+    }
+
+    public Genre(long id) {
+        this.id = id;
     }
 }

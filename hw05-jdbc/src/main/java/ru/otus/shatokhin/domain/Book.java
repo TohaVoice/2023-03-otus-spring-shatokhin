@@ -17,10 +17,25 @@ public class Book {
 
     private List<Genre> genres;
 
+    public Book(long id, String name, int releaseYear, Author author, List<Genre> genres) {
+        this.id = id;
+        this.name = name;
+        this.releaseYear = releaseYear;
+        this.author = author;
+        this.genres = genres;
+    }
+
     public Book(String name, int releaseYear, Author author, List<Genre> genres) {
         this.name = name;
         this.releaseYear = releaseYear;
         this.author = author;
         this.genres = genres;
+    }
+
+    public Book(long id, String name, int releaseYear, Author author) {
+        this.id = id;
+        this.name = name;
+        this.releaseYear = releaseYear;
+        this.author = author;
     }
 }

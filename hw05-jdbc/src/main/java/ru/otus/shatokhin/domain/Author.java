@@ -15,9 +15,20 @@ public class Author {
 
     private Date birthDate;
 
+    public Author(long id, String firstName, String lastName, Date birthDate) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
+
     public Author(String firstName, String lastName, Date birthDate) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
+    }
+
+    public Author(long id) {
+        this.id = id;
     }
 }

@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface AuthorDao {
 
-    void create(Author book);
+    void create(Author author);
 
     List<Author> getAll();
 
-    Author getById();
+    Author getById(long id);
 
 }
