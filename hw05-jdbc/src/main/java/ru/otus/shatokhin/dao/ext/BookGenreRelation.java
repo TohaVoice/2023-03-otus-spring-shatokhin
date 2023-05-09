@@ -1,13 +1,13 @@
-package ru.otus.shatokhin.domain;
+package ru.otus.shatokhin.dao.ext;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class BookGenre {
+public class BookGenreRelation {
     
     private long bookId;
     
-    private Genre genre;
+    private long genreId;
 }

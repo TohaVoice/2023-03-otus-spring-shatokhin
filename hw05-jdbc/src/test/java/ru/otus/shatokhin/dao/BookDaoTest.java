@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.shatokhin.domain.Author;
@@ -15,12 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @JdbcTest
 @Import(BookDaoJdbc.class)
 class BookDaoTest {
 
     private static final int EXISTING_BOOK_ID = 1;
+
+    @MockBean
+    private GenreDao genreDao;
 
     @Autowired
     private BookDaoJdbc bookDao;
@@ -55,6 +60,12 @@ class BookDaoTest {
 
     @Test
     void shouldReturnExpectedBooksList() {
+        List<Genre> genres = new ArrayList<>();
+        genres.add(new Genre(1, "Fantasy"));
+        genres.add(new Genre(2, "Adventure"));
+        genres.add(new Genre(3, "Novel"));
+        when(genreDao.getAll()).thenReturn(genres);
+
         List<Book> actualBooksList = bookDao.getAll();
 
         assertThat(actualBooksList).containsExactlyInAnyOrder(templateBook);

@@ -1,6 +1,7 @@
 package ru.otus.shatokhin.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -10,7 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.shatokhin.domain.Author;
 import ru.otus.shatokhin.domain.Book;
-import ru.otus.shatokhin.domain.BookGenre;
+import ru.otus.shatokhin.dao.ext.BookGenreRelation;
 import ru.otus.shatokhin.domain.Genre;
 
 import java.sql.Date;
@@ -21,11 +22,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ArrayList;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class BookDaoJdbc implements BookDao {
+
+    private final GenreDao genreDao;
 
     private final NamedParameterJdbcOperations namedParameterJdbc;
 
@@ -55,7 +59,7 @@ public class BookDaoJdbc implements BookDao {
                         "inner join author a on a.id = b.author_id " +
                         "where b.id = :id", params, new BookMapper()
         );
-        return fleshOutBooks(Collections.singletonList(book)).get(0);
+        return fleshOutBook(book);
 
     }
 
@@ -120,39 +124,58 @@ public class BookDaoJdbc implements BookDao {
         }
     }
 
-    private static class BookGenreMapper implements RowMapper<BookGenre> {
+    private static class GenreMapper implements RowMapper<Genre> {
 
         @Override
-        public BookGenre mapRow(ResultSet resultSet, int i) throws SQLException {
-            long bookId = resultSet.getLong("book_id");
-            long genreId = resultSet.getLong("genreId");
-            String genreName = resultSet.getString("genreName");
-            return new BookGenre(bookId, new Genre(genreId, genreName));
+        public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
+            long id = resultSet.getLong("id");
+            String name = resultSet.getString("name");
+            return new Genre(id, name);
         }
     }
 
     private List<Book> fleshOutBooks(List<Book> books) {
-        List<BookGenre> bookGenres = findBookGenreByBooks(books);
-        for (Book book : books) {
-            List<Genre> genres = bookGenres.stream()
-                    .filter(bookGenre -> bookGenre.getBookId() == book.getId())
-                    .map(BookGenre::getGenre)
-                    .collect(Collectors.toList());
-
-            book.setGenres(genres);
-        }
+        List<Genre> genres = genreDao.getAll();
+        List<BookGenreRelation> bookGenreRelationRelations = getBookGenreRelations();
+        mergeBooksInfo(books, genres, bookGenreRelationRelations);
         return books;
     }
 
-    private List<BookGenre> findBookGenreByBooks(List<Book> books) {
-        List<Long> bookIds = books.stream()
-                .map(Book::getId)
-                .toList();
-        Map<String, Object> params = Collections.singletonMap("bookIds", bookIds);
+    private Book fleshOutBook(Book book) {
+        if (book == null) {
+            return null;
+        }
+        List<Genre> bookGenres = findGenresByBookId(book.getId());
+        book.setGenres(bookGenres);
+        return book;
+    }
+
+    private List<BookGenreRelation> getBookGenreRelations() {
+        return namedParameterJdbc.query("select book_id, genre_id from book_genre bg order by bg.book_id, bg.genre_id",
+                (rs, i) -> new BookGenreRelation(rs.getLong(1), rs.getLong(2)));
+    }
+
+    private void mergeBooksInfo(List<Book> books, List<Genre> genres,
+                                List<BookGenreRelation> bookGenreRelationRelations) {
+        Map<Long, Genre> genresMap = genres.stream().collect(Collectors.toMap(Genre::getId, Function.identity()));
+        Map<Long, Book> booksMap = books.stream().collect(Collectors.toMap(Book::getId, Function.identity()));
+        bookGenreRelationRelations.forEach(r -> {
+            if (booksMap.containsKey(r.getBookId()) && genresMap.containsKey(r.getGenreId())) {
+                Book book = booksMap.get(r.getBookId());
+                if (CollectionUtils.isEmpty(book.getGenres())) {
+                    book.setGenres(new ArrayList<>());
+                }
+                booksMap.get(r.getBookId()).getGenres().add(genresMap.get(r.getGenreId()));
+            }
+        });
+    }
+
+    private List<Genre> findGenresByBookId(long bookId) {
+        Map<String, Object> params = Collections.singletonMap("bookId", bookId);
         return namedParameterJdbc.query(
-                "select g.id as genreId, g.name as genreName, bg.book_id from genre g " +
+                "select g.id, g.name from genre g " +
                         "inner join book_genre bg ON bg.genre_id = g.id " +
-                        "where bg.book_id in (:bookIds)", params, new BookGenreMapper());
+                        "where bg.book_id = :bookId", params, new GenreMapper());
     }
 
     private SqlParameterSource[] prepareBookGenreParams(long bookId, List<Genre> genres) {

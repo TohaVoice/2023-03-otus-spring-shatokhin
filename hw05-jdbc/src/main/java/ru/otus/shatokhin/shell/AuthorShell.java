@@ -21,41 +21,37 @@ public class AuthorShell {
     private final TableRender tableRender;
 
     @ShellMethod(value = "Get author list", key = {"al", "author-list"})
-    public void authorList() {
+    public String authorList() {
         List<Author> authors = authorService.getAll();
-        System.out.println(
-                tableRender.render(
-                        "Authors"
-                        , Arrays.asList("id", "First Name", "Last Name", "Birth Date")
-                        , (author) -> Arrays.asList(String.valueOf(author.getId())
-                                , author.getFirstName()
-                                , author.getLastName()
-                                , author.getBirthDate().toString()
-                        )
-                        , authors
+        return tableRender.render(
+                "Authors"
+                , Arrays.asList("id", "First Name", "Last Name", "Birth Date")
+                , (author) -> Arrays.asList(String.valueOf(author.getId())
+                        , author.getFirstName()
+                        , author.getLastName()
+                        , author.getBirthDate().toString()
                 )
+                , authors
         );
     }
 
     @ShellMethod(value = "Create new author", key = {"ca", "author-create"})
-    public void createAuthor(@ShellOption String firstName, @ShellOption String lastName
+    public String createAuthor(@ShellOption String firstName, @ShellOption String lastName
             , @ShellOption String birthDate) {
         authorService.create(new Author(firstName, lastName, Date.valueOf(birthDate)));
-        System.out.println("Author successfully added to the library");
+        return "Author successfully added to the library";
     }
 
     @ShellMethod(value = "Get author", key = {"ag", "author-get"})
-    public void getAuthorById(@ShellOption long id) {
-        System.out.println(
-                tableRender.singleRowRender(
-                        "Author"
-                        , Arrays.asList("id", "First Name", "Last Name", "Birth Date")
-                        , (author) -> Arrays.asList(String.valueOf(author.getId())
-                                , author.getFirstName()
-                                , author.getLastName()
-                                , author.getBirthDate().toString())
-                        , authorService.getById(id)
-                )
+    public String getAuthorById(@ShellOption long id) {
+        return tableRender.singleRowRender(
+                "Author"
+                , Arrays.asList("id", "First Name", "Last Name", "Birth Date")
+                , (author) -> Arrays.asList(String.valueOf(author.getId())
+                        , author.getFirstName()
+                        , author.getLastName()
+                        , author.getBirthDate().toString())
+                , authorService.getById(id)
         );
     }
 }

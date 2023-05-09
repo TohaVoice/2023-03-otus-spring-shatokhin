@@ -20,33 +20,29 @@ public class GenreShell {
     private final TableRender tableRender;
 
     @ShellMethod(value = "Get genre list", key = {"gl", "genre-list"})
-    public void genreList() {
+    public String genreList() {
         List<Genre> genres = genreService.getAll();
-        System.out.println(
-                tableRender.render(
-                        "Genres"
-                        , Arrays.asList("id", "Name")
-                        , (genre) -> Arrays.asList(String.valueOf(genre.getId()), genre.getName())
-                        , genres
-                )
+        return tableRender.render(
+                "Genres"
+                , Arrays.asList("id", "Name")
+                , (genre) -> Arrays.asList(String.valueOf(genre.getId()), genre.getName())
+                , genres
         );
     }
 
     @ShellMethod(value = "Create genre", key = {"gc", "genre-create"})
-    public void createGenre(@ShellOption String name) {
+    public String createGenre(@ShellOption String name) {
         genreService.create(new Genre(name));
-        System.out.println("Genre successfully added to the library");
+        return "Genre successfully added to the library";
     }
 
     @ShellMethod(value = "Get genre", key = {"gg", "genre-get"})
-    public void getGenreById(@ShellOption long id) {
-        System.out.println(
-                tableRender.singleRowRender(
-                        "Genre"
-                        , Arrays.asList("id", "Name")
-                        , (genre) -> Arrays.asList(String.valueOf(genre.getId()), genre.getName())
-                        , genreService.getById(id)
-                )
+    public String getGenreById(@ShellOption long id) {
+        return tableRender.singleRowRender(
+                "Genre"
+                , Arrays.asList("id", "Name")
+                , (genre) -> Arrays.asList(String.valueOf(genre.getId()), genre.getName())
+                , genreService.getById(id)
         );
     }
 }
