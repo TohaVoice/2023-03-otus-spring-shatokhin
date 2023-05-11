@@ -63,6 +63,13 @@ class BookRepositoryTest {
     }
 
     @Test
+    void shouldReturnExpectedBookNameById() {
+        String bookName = bookRepository.getBookNameById(templateBook.getId());
+
+        assertEquals(templateBook.getName(), bookName);
+    }
+
+    @Test
     void shouldReturnExpectedBooksList() {
         List<Book> books = bookRepository.getAll();
 

@@ -7,6 +7,7 @@ import org.springframework.shell.standard.ShellOption;
 import ru.otus.shatokhin.domain.Author;
 import ru.otus.shatokhin.domain.Book;
 import ru.otus.shatokhin.domain.Genre;
+import ru.otus.shatokhin.dto.BookDTO;
 import ru.otus.shatokhin.service.BookService;
 import ru.otus.shatokhin.tool.TableRender;
 
@@ -26,13 +27,12 @@ public class BookShell {
 
     @ShellMethod(value = "Get book list", key = {"bl", "book-list"})
     public String bookList() {
-        List<Book> books = bookService.getAll();
+        List<BookDTO> books = bookService.getAll();
         return tableRender.render(
                 "The Library Books",
                 Arrays.asList("id", "Name", "Author", "Release Year", "Genres"),
-                (book) -> Arrays.asList(String.valueOf(book.getId()), book.getName()
-                        , authorToString(book.getAuthor()), String.valueOf(book.getReleaseYear())
-                        , genresToString(book.getGenres())),
+                (bookDTO) -> Arrays.asList(bookDTO.getId(), bookDTO.getName(), bookDTO.getAuthorFullName()
+                        , bookDTO.getReleaseYear(), bookDTO.getGenres()),
                 books
         );
     }
@@ -52,9 +52,8 @@ public class BookShell {
         return tableRender.singleRowRender(
                 "Book",
                 Arrays.asList("id", "Name", "Author", "Release Year", "Genres"),
-                (book) -> Arrays.asList(String.valueOf(book.getId()), book.getName()
-                        , authorToString(book.getAuthor()), String.valueOf(book.getReleaseYear())
-                        , genresToString(book.getGenres())),
+                (bookDTO) -> Arrays.asList(bookDTO.getId(), bookDTO.getName(), bookDTO.getAuthorFullName()
+                        , bookDTO.getReleaseYear(), bookDTO.getGenres()),
                 bookService.getById(id)
         );
     }

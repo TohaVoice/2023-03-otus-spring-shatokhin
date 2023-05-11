@@ -1,6 +1,7 @@
 package ru.otus.shatokhin.service;
 
 import ru.otus.shatokhin.domain.Book;
+import ru.otus.shatokhin.dto.BookDTO;
 
 import java.util.List;
 
@@ -8,9 +9,11 @@ public interface BookService {
 
     void create(Book book);
 
-    Book getById(long id);
+    BookDTO getById(long id);
 
-    List<Book> getAll();
+    String getBookNameById(long id);
+
+    List<BookDTO> getAll();
 
     void update(Book book);
 

@@ -17,19 +17,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import ru.otus.shatokhin.consts.AppConst;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "book")
-@NamedEntityGraph(name = AppConst.AUTHOR_GRAPH, attributeNodes =
-        {@NamedAttributeNode("author")})
+@NamedEntityGraph(name = AppConst.AUTHOR_GRAPH, attributeNodes = @NamedAttributeNode("author"))
 public class Book {
 
     @Id
@@ -51,13 +50,11 @@ public class Book {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "book_genre",
-            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
-    @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 5)
-    private Set<Genre> genres;
+    @JoinTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private Set<Genre> genres = new HashSet<>();
 
     public Book(long id, String name, int releaseYear, Author author, Set<Genre> genres) {
         this.id = id;

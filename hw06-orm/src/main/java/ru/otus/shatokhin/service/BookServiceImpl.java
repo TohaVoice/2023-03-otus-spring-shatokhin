@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.shatokhin.domain.Book;
 import ru.otus.shatokhin.domain.Genre;
+import ru.otus.shatokhin.dto.BookDTO;
 import ru.otus.shatokhin.exception.EntityNotFoundException;
 import ru.otus.shatokhin.repository.BookRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,15 +30,23 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Book getById(long id) {
-        return bookRepository.getById(id).orElseThrow(() ->
-                new EntityNotFoundException(BOOK_NOT_FOUND, id));
+    public BookDTO getById(long id) {
+        return new BookDTO(bookRepository.getById(id).orElseThrow(() ->
+                new EntityNotFoundException(BOOK_NOT_FOUND, id)));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Book> getAll() {
-        return bookRepository.getAll();
+    public String getBookNameById(long id) {
+        return bookRepository.getBookNameById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BookDTO> getAll() {
+        return bookRepository.getAll().stream()
+                .map(BookDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Override

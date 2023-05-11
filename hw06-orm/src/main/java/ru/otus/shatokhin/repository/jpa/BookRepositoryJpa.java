@@ -35,6 +35,13 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
+    public String getBookNameById(long id) {
+        TypedQuery<String> query = em.createQuery("select b.name from Book b where b.id = :id", String.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
+    }
+
+    @Override
     public List<Book> getAll() {
         TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
         EntityGraph<?> authorGraph = em.getEntityGraph(AppConst.AUTHOR_GRAPH);

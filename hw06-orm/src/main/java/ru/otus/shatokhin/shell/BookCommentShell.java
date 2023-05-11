@@ -32,10 +32,10 @@ public class BookCommentShell {
 
     @ShellMethod(value = "Get book comments", key = {"bcl", "book-comment-list"})
     public String getBookCommentList(@ShellOption long bookId) {
-        Book book = bookService.getById(bookId);
+        String bookName = bookService.getBookNameById(bookId);
         List<BookComment> comments = bookCommentService.getCommentsByBookId(bookId);
         return tableRender.render(
-                "Comments of book '" + book.getName() + "'"
+                "Comments of book '" + bookName + "'"
                 , Arrays.asList("id", "Comment")
                 , (bookComment) -> Arrays.asList(String.valueOf(bookComment.getId()), bookComment.getText())
                 , comments

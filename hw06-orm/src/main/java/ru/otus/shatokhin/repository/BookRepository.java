@@ -11,6 +11,8 @@ public interface BookRepository {
 
     Optional<Book> getById(long id);
 
+    String getBookNameById(long id);
+
     List<Book> getAll();
 
     void update(Book book);
