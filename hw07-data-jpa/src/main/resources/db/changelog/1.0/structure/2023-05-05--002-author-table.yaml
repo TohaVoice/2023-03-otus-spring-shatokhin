@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2023-05-05--002-author-table
+      author: ashatokhin
+      createTable:
+        tableName: author
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_author
+          - column:
+              name: first_name
+              type: varchar(255)
+          - column:
+              name: last_name
+              type: varchar(255)
+          - column:
+              name: birth_date
+              type: date
