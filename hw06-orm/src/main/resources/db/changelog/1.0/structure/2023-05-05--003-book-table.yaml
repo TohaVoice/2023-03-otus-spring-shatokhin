@@ -1,0 +1,103 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2023-05-05--003-book-table
+      author: ashatokhin
+      createTable:
+        tableName: book
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_book
+          - column:
+              name: author_id
+              type: bigint
+              constraints:
+                nullable: true
+          - column:
+              name: name
+              type: varchar(255)
+          - column:
+              name: release_year
+              type: int
+
+  - changeSet:
+      id: 2023-05-05--003-book-genre-table
+      author: ashatokhin
+      createTable:
+        tableName: book_genre
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_book_genre
+          - column:
+              name: book_id
+              type: bigint
+              constraints:
+                nullable: false
+          - column:
+              name: genre_id
+              type: bigint
+              constraints:
+                nullable: false
+
+  - changeSet:
+      id: 2023-05-05--003-book-table-author_id-foreign-key
+      author: ashatokhin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: author_id
+            baseTableCatalogName: library
+            baseTableName: book
+            baseTableSchemaName: public
+            constraintName: fk_author_id
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableCatalogName: library
+            referencedTableName: author
+            referencedTableSchemaName: public
+            validate: true
+  - changeSet:
+      id: 2023-05-05--003-book-genre-table-book_id-foreign-key
+      author: ashatokhin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: book_id
+            baseTableCatalogName: library
+            baseTableName: book_genre
+            baseTableSchemaName: public
+            constraintName: fk_book_id
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableCatalogName: library
+            referencedTableName: book
+            referencedTableSchemaName: public
+            validate: true
+  - changeSet:
+      id: 2023-05-05--003-book-genre-table-genre_id-foreign-key
+      author: ashatokhin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: genre_id
+            baseTableCatalogName: library
+            baseTableName: book_genre
+            baseTableSchemaName: public
+            constraintName: fk_genre_id
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableCatalogName: library
+            referencedTableName: genre
+            referencedTableSchemaName: public
+            validate: true
