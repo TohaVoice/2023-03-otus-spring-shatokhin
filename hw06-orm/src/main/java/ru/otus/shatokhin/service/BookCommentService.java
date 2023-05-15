@@ -13,5 +13,7 @@ public interface BookCommentService {
 
     BookComment getCommentById(long id);
 
-    void deleteCommentFromBook(BookComment bookComment);
+    void updateComment(BookComment bookComment);
+
+    void deleteCommentById(long id);
 }

@@ -42,10 +42,16 @@ public class BookCommentShell {
         );
     }
 
+    @ShellMethod(value = "Update book", key = {"bcu", "book-comment-update"})
+    public String updateComment(@ShellOption long commentId, @ShellOption String changedText) {
+        BookComment comment = new BookComment(commentId, changedText);
+        bookCommentService.updateComment(comment);
+        return "Comment updated successfully";
+    }
+
     @ShellMethod(value = "Delete book comment", key = {"bcd", "book-comment-delete"})
     public String deleteById(@ShellOption long commentId) {
-        BookComment bookComment = bookCommentService.getCommentById(commentId);
-        bookCommentService.deleteCommentFromBook(bookComment);
+        bookCommentService.deleteCommentById(commentId);
         return "Comment deleted successfully";
     }
 }

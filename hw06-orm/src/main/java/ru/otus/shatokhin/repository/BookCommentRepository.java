@@ -13,5 +13,7 @@ public interface BookCommentRepository {
 
     Optional<BookComment> getCommentById(long id);
 
-    void deleteCommentFromBook(BookComment bookComment);
+    void updateComment(BookComment bookComment);
+
+    void deleteCommentById(long id);
 }

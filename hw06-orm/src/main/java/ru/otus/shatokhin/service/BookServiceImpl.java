@@ -36,16 +36,19 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void update(Book book) {
         bookRepository.update(book);
     }
 
     @Override
+    @Transactional
     public void addGenreToBookById(long bookId, long genreId) {
         bookRepository.addGenreToBookById(bookId, genreId);
     }
 
     @Override
+    @Transactional
     public void deleteGenreFromBookById(long bookId, long genreId) {
         bookRepository.deleteGenreFromBookById(bookId, genreId);
     }

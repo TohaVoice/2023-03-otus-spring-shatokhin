@@ -22,11 +22,13 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Genre> getAll() {
         return genreRepository.getAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Genre getById(long id) {
         return genreRepository.getById(id).orElseThrow(() ->
                 new EntityNotFoundException("Genre with id=%s is not found", id));

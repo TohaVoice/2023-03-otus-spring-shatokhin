@@ -8,7 +8,6 @@ import ru.otus.shatokhin.exception.EntityNotFoundException;
 import ru.otus.shatokhin.repository.BookCommentRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +22,7 @@ public class BookCommentServiceImpl implements BookCommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookComment> getCommentsByBookId(long bookId) {
         return bookCommentRepository.getCommentsByBookId(bookId);
     }
@@ -36,7 +36,13 @@ public class BookCommentServiceImpl implements BookCommentService {
 
     @Override
     @Transactional
-    public void deleteCommentFromBook(BookComment bookComment) {
-        bookCommentRepository.deleteCommentFromBook(bookComment);
+    public void updateComment(BookComment bookComment) {
+        bookCommentRepository.updateComment(bookComment);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommentById(long id) {
+        bookCommentRepository.deleteCommentById(id);
     }
 }
