@@ -1,10 +1,14 @@
-package ru.otus.shatokhin.repository;
+package ru.otus.shatokhin.repository.jpa;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.shatokhin.consts.AppConst;
 import ru.otus.shatokhin.domain.Book;
+import ru.otus.shatokhin.repository.BookRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -61,9 +65,9 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        TypedQuery<Book> query = em.createQuery("delete " +
+        Query query = em.createQuery("delete " +
                 "from Book b " +
-                "where b.id = :id", Book.class);
+                "where b.id = :id");
         query.setParameter("id", id);
         query.executeUpdate();
     }

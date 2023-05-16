@@ -9,6 +9,6 @@ public class LibraryApp {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(LibraryApp.class, args);
-//        Console.main(args);
+        Console.main(args);
     }
 }
