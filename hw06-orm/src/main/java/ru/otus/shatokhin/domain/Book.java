@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import ru.otus.shatokhin.consts.AppConst;
 
 import java.util.List;
 import java.util.Set;
@@ -15,8 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "book")
-@NamedEntityGraph(name = AppConst.AUTHOR_GENRES_GRAPH, attributeNodes =
-        {@NamedAttributeNode("author"), @NamedAttributeNode("genres")})
+@NamedEntityGraph(name = "book-author-graph", attributeNodes = @NamedAttributeNode("author"))
 public class Book {
 
     @Id
