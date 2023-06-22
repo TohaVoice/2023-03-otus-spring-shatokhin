@@ -14,22 +14,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinTable;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import ru.otus.shatokhin.consts.AppConst;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "book")
-@NamedEntityGraph(name = AppConst.AUTHOR_GRAPH, attributeNodes =
-        {@NamedAttributeNode("author")})
+@NamedEntityGraph(name = AppConst.AUTHOR_GENRES_GRAPH, attributeNodes =
+        {@NamedAttributeNode("author"), @NamedAttributeNode("genres")})
 public class Book {
 
     @Id
@@ -43,23 +38,17 @@ public class Book {
     @Column(name = "release_year")
     private int releaseYear;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private Author author;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_genre",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
-    @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 5)
-    private Set<Genre> genres;
+    private List<Genre> genres;
 
-    public Book(long id, String name, int releaseYear, Author author, Set<Genre> genres) {
+    public Book(long id, String name, int releaseYear, Author author, List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.releaseYear = releaseYear;
@@ -67,7 +56,7 @@ public class Book {
         this.genres = genres;
     }
 
-    public Book(String name, int releaseYear, Author author, Set<Genre> genres) {
+    public Book(String name, int releaseYear, Author author, List<Genre> genres) {
         this.name = name;
         this.releaseYear = releaseYear;
         this.author = author;

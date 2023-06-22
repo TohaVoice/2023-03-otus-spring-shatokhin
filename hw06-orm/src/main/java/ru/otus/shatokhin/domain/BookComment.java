@@ -11,7 +11,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -32,7 +31,6 @@ public class BookComment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", updatable = false)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private Book book;
 
     public BookComment(Book book, String text) {

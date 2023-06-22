@@ -36,8 +36,7 @@ class AuthorRepositoryTest {
     @Test
     void shouldReturnExpectedAuthorById() {
         Author author = new Author(1, "George", "Martin", Date.valueOf("1948-09-20"));
-
-        Author actualAuthor = authorRepository.getById(1).orElseThrow();
+        Author actualAuthor = authorRepository.getById(1).get();
 
         assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(author);
     }

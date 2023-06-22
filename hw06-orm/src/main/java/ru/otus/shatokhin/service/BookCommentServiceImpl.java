@@ -13,8 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookCommentServiceImpl implements BookCommentService {
 
-    private final static String COMMENT_NOT_FOUND = "Comment with id=%s is not found";
-
     private final BookCommentRepository bookCommentRepository;
 
     @Override
@@ -33,7 +31,7 @@ public class BookCommentServiceImpl implements BookCommentService {
     @Transactional(readOnly = true)
     public BookComment getCommentById(long id) {
         return bookCommentRepository.getCommentById(id).orElseThrow(() ->
-                new EntityNotFoundException(COMMENT_NOT_FOUND, id));
+                new EntityNotFoundException("Comment with id=%s is not found", id));
     }
 
     @Override
@@ -45,9 +43,6 @@ public class BookCommentServiceImpl implements BookCommentService {
     @Override
     @Transactional
     public void deleteCommentById(long id) {
-        BookComment bookComment = bookCommentRepository.getCommentById(id).orElseThrow(() ->
-                new EntityNotFoundException(COMMENT_NOT_FOUND, id));
-
-        bookCommentRepository.removeComment(bookComment);
+        bookCommentRepository.deleteCommentById(id);
     }
 }

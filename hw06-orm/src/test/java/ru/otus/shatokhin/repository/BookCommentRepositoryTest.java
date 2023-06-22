@@ -48,7 +48,7 @@ public class BookCommentRepositoryTest {
         BookComment bookComment = new BookComment(templateBook, "An excellent book!");
         bookComment.setId(1);
 
-        BookComment actualBookComment = bookCommentRepository.getCommentById(1).orElseThrow();
+        BookComment actualBookComment = bookCommentRepository.getCommentById(1).get();
 
         assertThat(actualBookComment).usingRecursiveComparison().isEqualTo(bookComment);
     }
@@ -78,10 +78,12 @@ public class BookCommentRepositoryTest {
 
     @Test
     void shouldCorrectDeleteCommentById() {
-        BookComment bookComment = em.find(BookComment.class, 1);
+        assertThatCode(() -> em.find(BookComment.class, 1))
+                .doesNotThrowAnyException();
 
-        bookCommentRepository.removeComment(bookComment);
-        bookComment = em.find(BookComment.class, 1);
+        bookCommentRepository.deleteCommentById(1);
+        em.clear();
+        BookComment bookComment = em.find(BookComment.class, 1);
 
         assertNull(bookComment);
     }

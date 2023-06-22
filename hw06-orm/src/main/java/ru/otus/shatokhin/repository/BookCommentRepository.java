@@ -15,5 +15,5 @@ public interface BookCommentRepository {
 
     void updateComment(BookComment bookComment);
 
-    void removeComment(BookComment bookComment);
+    void deleteCommentById(long id);
 }

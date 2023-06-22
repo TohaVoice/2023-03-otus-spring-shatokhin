@@ -15,5 +15,9 @@ public interface BookRepository {
 
     void update(Book book);
 
-    void remove(Book book);
+    void addGenreToBookById(long bookId, long genreId);
+
+    void deleteGenreFromBookById(long bookId, long genreId);
+
+    void deleteById(long id);
 }

@@ -28,7 +28,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Author getById(long id) {
         return authorRepository.getById(id).orElseThrow(() ->
                 new EntityNotFoundException("Author with id=%s is not found", id));

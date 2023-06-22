@@ -8,17 +8,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.shatokhin.domain.Author;
 import ru.otus.shatokhin.domain.Book;
-import ru.otus.shatokhin.domain.BookComment;
 import ru.otus.shatokhin.domain.Genre;
 import ru.otus.shatokhin.repository.jpa.BookRepositoryJpa;
 
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DataJpaTest
 @Import(BookRepositoryJpa.class)
@@ -38,7 +38,7 @@ class BookRepositoryTest {
     @BeforeEach
     void createTemplateBook() {
         Author author = new Author(1, "George", "Martin", Date.valueOf("1948-09-20"));
-        Set<Genre> genres = new HashSet<>();
+        List<Genre> genres = new ArrayList<>();
         genres.add(new Genre(1, "Fantasy"));
         genres.add(new Genre(2, "Adventure"));
         templateBook = new Book(EXISTING_BOOK_ID, "Game of Thrones", 1996, author, genres);
@@ -50,14 +50,14 @@ class BookRepositoryTest {
 
         bookRepository.create(templateBook);
 
-        Book actualBook = bookRepository.getById(2).orElseThrow();
+        Book actualBook = bookRepository.getById(2).get();
 
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(templateBook);
     }
 
     @Test
     void shouldReturnExpectedBookById() {
-        Book actualBook = bookRepository.getById(templateBook.getId()).orElseThrow();
+        Book actualBook = bookRepository.getById(templateBook.getId()).get();
 
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(templateBook);
     }
@@ -80,7 +80,7 @@ class BookRepositoryTest {
         templateBook.setName("A Song of Ice and Fire: Game of Thrones");
 
         bookRepository.update(templateBook);
-        Book actualBook = bookRepository.getById(templateBook.getId()).orElseThrow();
+        Book actualBook = bookRepository.getById(templateBook.getId()).get();
 
         assertThat(actualBook).usingRecursiveComparison().ignoringFields("author")
                 .isEqualTo(templateBook);
@@ -88,12 +88,36 @@ class BookRepositoryTest {
 
     @Test
     void shouldCorrectDeleteBookById() {
-        Book book = em.find(Book.class, EXISTING_BOOK_ID);
+        assertThatCode(() -> bookRepository.getById(EXISTING_BOOK_ID))
+                .doesNotThrowAnyException();
 
-        bookRepository.remove(book);
-        book = em.find(Book.class, EXISTING_BOOK_ID);
+        bookRepository.deleteById(EXISTING_BOOK_ID);
+        em.clear();
+        Optional<Book> bookOptional = bookRepository.getById(EXISTING_BOOK_ID);
 
-        assertNull(book);
+        assertEquals(Optional.empty(), bookOptional);
     }
 
+    @Test
+    void shouldAddGenreToBook() {
+        templateBook.getGenres().add(new Genre(3, "Novel"));
+
+        bookRepository.addGenreToBookById(EXISTING_BOOK_ID, 3);
+        Book actualBook = bookRepository.getById(templateBook.getId()).get();
+
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(templateBook);
+    }
+
+    @Test
+    void shouldCorrectDeleteGenreFromBook() {
+        assertThatCode(() -> bookRepository.getById(EXISTING_BOOK_ID))
+                .doesNotThrowAnyException();
+        templateBook.getGenres().remove(1);
+
+        bookRepository.deleteGenreFromBookById(EXISTING_BOOK_ID, 2);
+        em.clear();
+        Book actualBook = bookRepository.getById(templateBook.getId()).get();
+
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(templateBook);
+    }
 }
