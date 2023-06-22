@@ -30,7 +30,7 @@ databaseChangeLog:
             baseTableCatalogName: library
             baseTableName: book_comment
             baseTableSchemaName: public
-            constraintName: fk_comment_book_id
+            constraintName: fk_book_id
             onDelete: CASCADE
             onUpdate: RESTRICT
             referencedColumnNames: id

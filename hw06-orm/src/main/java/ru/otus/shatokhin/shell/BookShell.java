@@ -89,7 +89,7 @@ public class BookShell {
         return "Genre deleted successfully";
     }
 
-    private String genresToString(List<Genre> genres) {
+    private String genresToString(Set<Genre> genres) {
         return genres.stream()
                 .map(Genre::getName)
                 .collect(Collectors.joining(","));

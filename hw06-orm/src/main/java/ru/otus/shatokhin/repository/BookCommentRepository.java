@@ -3,15 +3,12 @@ package ru.otus.shatokhin.repository;
 import ru.otus.shatokhin.domain.BookComment;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BookCommentRepository {
 
-    void addCommentToBook(BookComment bookComment);
+    void addCommentToBook(long bookId, BookComment bookComment);
 
     List<BookComment> getCommentsByBookId(long bookId);
 
-    Optional<BookComment> getCommentById(long id);
-
-    void deleteCommentFromBook(BookComment bookComment);
+    void deleteCommentFromBook(long bookId);
 }

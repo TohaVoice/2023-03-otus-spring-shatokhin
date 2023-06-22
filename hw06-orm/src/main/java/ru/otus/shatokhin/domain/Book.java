@@ -36,21 +36,21 @@ public class Book {
     @JoinTable(name = "book_genre",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
-    private List<Genre> genres;
+    private Set<Genre> genres;
 
     public Book(long id, String name, int releaseYear, Author author, List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.releaseYear = releaseYear;
         this.author = author;
-        this.genres = genres;
+        this.genres = (Set<Genre>) genres;
     }
 
     public Book(String name, int releaseYear, Author author, List<Genre> genres) {
         this.name = name;
         this.releaseYear = releaseYear;
         this.author = author;
-        this.genres = genres;
+        this.genres = (Set<Genre>) genres;
     }
 
     public Book(long id, String name, int releaseYear, Author author) {
@@ -58,9 +58,5 @@ public class Book {
         this.name = name;
         this.releaseYear = releaseYear;
         this.author = author;
-    }
-
-    public Book(long id) {
-        this.id = id;
     }
 }

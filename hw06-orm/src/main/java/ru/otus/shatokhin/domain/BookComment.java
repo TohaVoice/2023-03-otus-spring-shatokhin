@@ -20,18 +20,4 @@ public class BookComment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
-
-    public BookComment(Book book, String text) {
-        this.text = text;
-        this.book = book;
-    }
-
-    public BookComment(long id, Book book) {
-        this.id = id;
-        this.book = book;
-    }
-
-    public BookComment(long id) {
-        this.id = id;
-    }
 }
