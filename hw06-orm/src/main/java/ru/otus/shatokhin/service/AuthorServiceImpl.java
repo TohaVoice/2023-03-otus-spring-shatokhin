@@ -3,6 +3,7 @@ package ru.otus.shatokhin.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.shatokhin.dao.AuthorDao;
 import ru.otus.shatokhin.domain.Author;
 import ru.otus.shatokhin.exception.EntityNotFoundException;
 import ru.otus.shatokhin.repository.AuthorRepository;

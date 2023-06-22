@@ -10,10 +10,11 @@ import ru.otus.shatokhin.domain.Genre;
 import ru.otus.shatokhin.service.BookService;
 import ru.otus.shatokhin.tool.TableRender;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -39,7 +40,11 @@ public class BookShell {
     @ShellMethod(value = "Create book", key = {"bc", "book-create"})
     public String createBook(@ShellOption String name, @ShellOption long authorId, @ShellOption int releaseYear
             , @ShellOption String genreIds) {
-        List<Genre> genres = convertIdsToGenres(genreIds);
+        List<String> genresIds = List.of(genreIds.split(","));
+        List<Genre> genres = new ArrayList<>();
+        for (String genreId : genresIds) {
+            genres.add(new Genre(Long.parseLong(genreId)));
+        }
         Book book = new Book(name, releaseYear, new Author(authorId), genres);
         bookService.create(book);
 
@@ -66,9 +71,8 @@ public class BookShell {
 
     @ShellMethod(value = "Update book", key = {"bu", "book-update"})
     public String updateById(@ShellOption long id, @ShellOption String name, @ShellOption long authorId
-            , @ShellOption int releaseYear, @ShellOption String genreIds) {
-        List<Genre> genres = convertIdsToGenres(genreIds);
-        Book book = new Book(id, name, releaseYear, new Author(authorId), genres);
+            , @ShellOption int releaseYear) {
+        Book book = new Book(id, name, releaseYear, new Author(authorId), null);
         bookService.update(book);
         return "Book updated successfully";
     }
@@ -93,12 +97,6 @@ public class BookShell {
 
     private String authorToString(Author author) {
         return author.getFirstName() + " " + author.getLastName();
-    }
-
-    private List<Genre> convertIdsToGenres(String genreIds) {
-        return Stream.of(genreIds.split(","))
-                .map(id -> new Genre(Long.parseLong(id)))
-                .collect(Collectors.toList());
     }
 
 }

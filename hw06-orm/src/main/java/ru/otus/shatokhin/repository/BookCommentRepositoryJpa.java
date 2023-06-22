@@ -1,4 +1,4 @@
-package ru.otus.shatokhin.repository.jpa;
+package ru.otus.shatokhin.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -7,7 +7,6 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.shatokhin.domain.BookComment;
-import ru.otus.shatokhin.repository.BookCommentRepository;
 
 import java.util.List;
 import java.util.Optional;

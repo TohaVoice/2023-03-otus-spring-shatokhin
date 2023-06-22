@@ -1,11 +1,11 @@
-package ru.otus.shatokhin.repository.jpa;
+package ru.otus.shatokhin.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.shatokhin.domain.Author;
-import ru.otus.shatokhin.repository.AuthorRepository;
+import ru.otus.shatokhin.domain.Genre;
 
 import java.util.List;
 import java.util.Optional;
