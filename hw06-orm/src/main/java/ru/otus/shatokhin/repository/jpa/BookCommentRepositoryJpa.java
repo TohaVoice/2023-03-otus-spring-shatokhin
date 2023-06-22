@@ -2,7 +2,6 @@ package ru.otus.shatokhin.repository.jpa;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -43,11 +42,7 @@ public class BookCommentRepositoryJpa implements BookCommentRepository {
     }
 
     @Override
-    public void deleteCommentById(long id) {
-        Query query = em.createQuery("delete " +
-                "from BookComment bc " +
-                "where bc.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void removeComment(BookComment bookComment) {
+        em.remove(bookComment);
     }
 }

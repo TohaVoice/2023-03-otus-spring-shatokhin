@@ -12,6 +12,7 @@ import ru.otus.shatokhin.tool.TableRender;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,7 +40,7 @@ public class BookShell {
     @ShellMethod(value = "Create book", key = {"bc", "book-create"})
     public String createBook(@ShellOption String name, @ShellOption long authorId, @ShellOption int releaseYear
             , @ShellOption String genreIds) {
-        List<Genre> genres = convertIdsToGenres(genreIds);
+        Set<Genre> genres = convertIdsToGenres(genreIds);
         Book book = new Book(name, releaseYear, new Author(authorId), genres);
         bookService.create(book);
 
@@ -67,7 +68,7 @@ public class BookShell {
     @ShellMethod(value = "Update book", key = {"bu", "book-update"})
     public String updateById(@ShellOption long id, @ShellOption String name, @ShellOption long authorId
             , @ShellOption int releaseYear, @ShellOption String genreIds) {
-        List<Genre> genres = convertIdsToGenres(genreIds);
+        Set<Genre> genres = convertIdsToGenres(genreIds);
         Book book = new Book(id, name, releaseYear, new Author(authorId), genres);
         bookService.update(book);
         return "Book updated successfully";
@@ -85,7 +86,7 @@ public class BookShell {
         return "Genre deleted successfully";
     }
 
-    private String genresToString(List<Genre> genres) {
+    private String genresToString(Set<Genre> genres) {
         return genres.stream()
                 .map(Genre::getName)
                 .collect(Collectors.joining(","));
@@ -95,10 +96,10 @@ public class BookShell {
         return author.getFirstName() + " " + author.getLastName();
     }
 
-    private List<Genre> convertIdsToGenres(String genreIds) {
+    private Set<Genre> convertIdsToGenres(String genreIds) {
         return Stream.of(genreIds.split(","))
                 .map(id -> new Genre(Long.parseLong(id)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
 }
