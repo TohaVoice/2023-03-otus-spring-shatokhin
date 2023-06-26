@@ -8,10 +8,7 @@ import ru.otus.shatokhin.domain.Author;
 import ru.otus.shatokhin.domain.Book;
 import ru.otus.shatokhin.domain.Genre;
 import ru.otus.shatokhin.service.BookService;
-import ru.otus.shatokhin.tool.TableRender;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,32 +19,14 @@ public class BookShell {
 
     private final BookService bookService;
 
-    private final TableRender tableRender;
-
     @ShellMethod(value = "Get book list", key = {"bl", "book-list"})
     public String bookList() {
-        List<Book> books = bookService.findAll();
-        return tableRender.render(
-                "The Library Books",
-                Arrays.asList("id", "Name", "Author", "Release Year", "Genres"),
-                (book) -> Arrays.asList(String.valueOf(book.getId()), book.getName()
-                        , authorToString(book.getAuthor()), String.valueOf(book.getReleaseYear())
-                        , genresToString(book.getGenres())),
-                books
-        );
+        return bookService.getBooksAsString();
     }
 
     @ShellMethod(value = "Get book list by genre name", key = {"blg", "book-list-by-genre"})
     public String bookListByGenreName(@ShellOption String genreName) {
-        List<Book> books = bookService.findByGenreName(genreName);
-        return tableRender.render(
-                "The Library Books",
-                Arrays.asList("id", "Name", "Author", "Release Year", "Genres"),
-                (book) -> Arrays.asList(String.valueOf(book.getId()), book.getName()
-                        , authorToString(book.getAuthor()), String.valueOf(book.getReleaseYear())
-                        , genresToString(book.getGenres())),
-                books
-        );
+        return bookService.findByGenreNameAsString(genreName);
     }
 
     @ShellMethod(value = "Create book", key = {"bc", "book-create"})
@@ -62,14 +41,7 @@ public class BookShell {
 
     @ShellMethod(value = "Get book", key = {"bg", "book-get"})
     public String getById(@ShellOption long id) {
-        return tableRender.singleRowRender(
-                "Book",
-                Arrays.asList("id", "Name", "Author", "Release Year", "Genres"),
-                (book) -> Arrays.asList(String.valueOf(book.getId()), book.getName()
-                        , authorToString(book.getAuthor()), String.valueOf(book.getReleaseYear())
-                        , genresToString(book.getGenres())),
-                bookService.findById(id)
-        );
+        return bookService.getBookByIdAsString(id);
     }
 
     @ShellMethod(value = "Delete book", key = {"bd", "book-delete"})
@@ -97,16 +69,6 @@ public class BookShell {
     public String deleteGenreFromBook(@ShellOption long bookId, @ShellOption long genreId) {
         bookService.deleteGenreFromBookById(bookId, genreId);
         return "Genre deleted successfully";
-    }
-
-    private String genresToString(Set<Genre> genres) {
-        return genres.stream()
-                .map(Genre::getName)
-                .collect(Collectors.joining(","));
-    }
-
-    private String authorToString(Author author) {
-        return author.getFirstName() + " " + author.getLastName();
     }
 
     private Set<Genre> convertIdsToGenres(String genreIds) {

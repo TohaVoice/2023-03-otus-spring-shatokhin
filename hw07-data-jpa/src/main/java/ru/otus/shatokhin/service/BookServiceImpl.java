@@ -2,12 +2,17 @@ package ru.otus.shatokhin.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.shatokhin.domain.Book;
 import ru.otus.shatokhin.domain.Genre;
+import ru.otus.shatokhin.dto.BookProjection;
 import ru.otus.shatokhin.exception.EntityNotFoundException;
 import ru.otus.shatokhin.repository.BookRepository;
+import ru.otus.shatokhin.tool.TableRender;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -20,6 +25,8 @@ public class BookServiceImpl implements BookService {
 
     private final GenreService genreService;
 
+    private final TableRender tableRender;
+
     @Override
     @Transactional
     public void save(Book book) {
@@ -28,20 +35,47 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Book findById(long id) {
-        return bookRepository.findById(id).orElseThrow(() ->
+    public BookProjection findById(long id) {
+        return bookRepository.findWithInterfaceProjectionWithoutQueryById(id).orElseThrow(() ->
                 new EntityNotFoundException(BOOK_NOT_FOUND, id));
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public String getBookNameById(long id) {
+        return bookRepository.getBookNameById(id);
     }
 
     @Override
-    public List<Book> findByGenreName(String genreName) {
-        return bookRepository.findByGenreName(genreName);
+    @Transactional(readOnly = true)
+    public List<BookProjection> findAll() {
+        return bookRepository.findAllWithInterfaceProjectionWithoutQueryBy();
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public String getBooksAsString() {
+        var bookProjections = findAll();
+        return renderBooksAsString(bookProjections);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public String getBookByIdAsString(long id) {
+        var bookProjection = findById(id);
+        return renderBooksAsString(Collections.singletonList(bookProjection));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BookProjection> findByGenreName(String genreName) {
+        return bookRepository.findByGenreNameWithInterfaceProjection(genreName);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public String findByGenreNameAsString(String genreName) {
+        var bookProjections = findByGenreName(genreName);
+        return renderBooksAsString(bookProjections);
     }
 
     @Override
@@ -76,5 +110,16 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void deleteById(long id) {
         bookRepository.deleteById(id);
+    }
+
+    private String renderBooksAsString(List<BookProjection> bookProjections) {
+        return tableRender.render(
+                "The Library Books",
+                Arrays.asList("id", "Name", "Author", "Release Year", "Genres"),
+                (book) -> Arrays.asList(book.getId(), book.getName()
+                        , book.getAuthorFullName(), book.getReleaseYear()
+                        , book.getGenreNames()),
+                bookProjections
+        );
     }
 }

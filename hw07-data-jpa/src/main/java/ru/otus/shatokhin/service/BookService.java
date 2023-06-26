@@ -1,6 +1,7 @@
 package ru.otus.shatokhin.service;
 
 import ru.otus.shatokhin.domain.Book;
+import ru.otus.shatokhin.dto.BookProjection;
 
 import java.util.List;
 
@@ -8,11 +9,19 @@ public interface BookService {
 
     void save(Book book);
 
-    Book findById(long id);
+    BookProjection findById(long id);
 
-    List<Book> findAll();
+    String getBookNameById(long id);
 
-    List<Book> findByGenreName(String genreName);
+    List<BookProjection> findAll();
+
+    String getBooksAsString();
+
+    String getBookByIdAsString(long id);
+
+    List<BookProjection> findByGenreName(String genreName);
+
+    String findByGenreNameAsString(String genreName);
 
     void addGenreToBookById(long bookId, long genreId);
 
