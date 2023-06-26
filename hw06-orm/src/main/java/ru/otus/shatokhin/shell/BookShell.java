@@ -85,16 +85,6 @@ public class BookShell {
         return "Genre deleted successfully";
     }
 
-    private String genresToString(Set<Genre> genres) {
-        return genres.stream()
-                .map(Genre::getName)
-                .collect(Collectors.joining(","));
-    }
-
-    private String authorToString(Author author) {
-        return author.getFirstName() + " " + author.getLastName();
-    }
-
     private Set<Genre> convertIdsToGenres(String genreIds) {
         return Stream.of(genreIds.split(","))
                 .map(id -> new Genre(Long.parseLong(id)))
