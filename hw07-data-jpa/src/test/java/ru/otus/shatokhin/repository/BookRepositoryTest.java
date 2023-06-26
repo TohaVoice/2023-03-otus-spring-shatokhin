@@ -1,5 +1,6 @@
 package ru.otus.shatokhin.repository;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.otus.shatokhin.domain.Author;
 import ru.otus.shatokhin.domain.Book;
 import ru.otus.shatokhin.domain.Genre;
+import ru.otus.shatokhin.dto.BookProjection;
 
 import java.sql.Date;
 import java.util.*;
@@ -39,29 +41,42 @@ class BookRepositoryTest {
     }
 
     @Test
-    void shouldReturnExpectedBooksList() {
-        List<Book> books = bookRepository.findAll();
+    void shouldReturnExpectedBookById() {
+        BookProjection actualBookProjection =
+                bookRepository.findWithInterfaceProjectionWithoutQueryById(templateBook.getId()).orElseThrow();
 
-        assertThat(books).isNotNull().hasSize(EXPECTED_BOOKS_COUNT)
-                .allMatch(b -> b.getId() == 1)
-                .allMatch(b -> b.getAuthor().getId() == 1)
-                .allMatch(b -> b.getAuthor().getFirstName().equals("George"))
-                .allMatch(b -> b.getAuthor().getLastName().equals("Martin"))
-                .allMatch(b -> b.getAuthor().getBirthDate().equals(Date.valueOf("1948-09-20")))
-                .allMatch(b -> b.getGenres().size() == 2);
+        assertThat(actualBookProjection).usingRecursiveComparison().isEqualTo(templateBook);
+    }
+
+    @Test
+    void shouldReturnExpectedBookNameById() {
+        String bookName = bookRepository.getBookNameById(templateBook.getId());
+
+        Assertions.assertEquals(templateBook.getName(), bookName);
+    }
+
+    @Test
+    void shouldReturnExpectedBooksList() {
+        List<BookProjection> bookProjections = bookRepository.findAllWithInterfaceProjectionWithoutQueryBy();
+
+        assertThat(bookProjections).isNotNull().hasSize(EXPECTED_BOOKS_COUNT)
+                .allMatch(b -> b.getId().equals("1"))
+                .allMatch(b -> b.getName().equals("Game of Thrones"))
+                .allMatch(b -> b.getAuthorFullName().equals("George Martin"))
+                .allMatch(b -> b.getReleaseYear().equals("1996"))
+                .allMatch(b -> b.getGenreNames().equals("Fantasy, Adventure"));
     }
 
     @Test
     void shouldReturnExpectedBooksListByGenre() {
-        List<Book> books = bookRepository.findByGenreName("Fantasy");
+        List<BookProjection> bookProjections = bookRepository.findByGenreNameWithInterfaceProjection("Fantasy");
 
-        assertThat(books).isNotNull().hasSize(EXPECTED_BOOKS_COUNT)
-                .allMatch(b -> b.getId() == 1)
-                .allMatch(b -> b.getAuthor().getId() == 1)
-                .allMatch(b -> b.getAuthor().getFirstName().equals("George"))
-                .allMatch(b -> b.getAuthor().getLastName().equals("Martin"))
-                .allMatch(b -> b.getAuthor().getBirthDate().equals(Date.valueOf("1948-09-20")))
-                .allMatch(b -> b.getGenres().size() == 2);
+        assertThat(bookProjections).isNotNull().hasSize(EXPECTED_BOOKS_COUNT)
+                .allMatch(b -> b.getId().equals("1"))
+                .allMatch(b -> b.getName().equals("Game of Thrones"))
+                .allMatch(b -> b.getAuthorFullName().equals("George Martin"))
+                .allMatch(b -> b.getReleaseYear().equals("1996"))
+                .allMatch(b -> b.getGenreNames().equals("Fantasy, Adventure"));
     }
 
 }
